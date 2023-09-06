@@ -1,11 +1,11 @@
 import datetime
 import os
-import telebot
-import pandas as pd
 import sqlite3
-from telebot import types
 
+import pandas as pd
+import telebot
 from dotenv import load_dotenv
+from telebot import types
 
 load_dotenv()
 
@@ -32,7 +32,7 @@ def start(message):
 
 
 @bot.message_handler(content_types=['text'])
-def save_file(message):
+def save_file_btn(message):
     if message.text == 'Загрузить файл':
         bot.send_message(message.chat.id, 'Вставьте файл')
 
@@ -42,7 +42,6 @@ def save_file(message):
     """Сохранение файла."""
 
     try:
-        chat_id = message.chat.id
         file_info = bot.get_file(message.document.file_id)
         file_name, file_extenstion = os.path.splitext(file_info.file_path)
         now = datetime.datetime.now()
@@ -90,10 +89,8 @@ def insert_data_to_db(df):
     conn.close()
 
 
-
-# Handle all other messages with content_type 'text' (content_types defaults to ['text'])
 @bot.message_handler(func=lambda message: True)
-def echo_message(message):
+def echo_all(message):
     bot.reply_to(message, message.text)
 
 
