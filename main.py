@@ -7,6 +7,8 @@ import telebot
 from dotenv import load_dotenv
 from telebot import types
 
+import xpath_parser
+
 load_dotenv()
 
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
@@ -65,8 +67,10 @@ def read_exel_by_pd(path, message):
 
 def send_msg(message, df):
     for index, row in df.iterrows():
-        line = row.get('title') + '\n' + row.get('url') + '\n' + row.get(
-            'xpath')
+        url = row.get('url')
+        xpath = row.get('xpath')
+        price = xpath_parser.parse(url, xpath)
+        line = row.get('title') + '\n' + url + '\n' + xpath + '\n' + price
         bot.send_message(message.chat.id, line)
 
 
